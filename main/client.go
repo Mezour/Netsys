@@ -10,22 +10,16 @@ import (
 
 func main() {
 
-	Dial, err := net.DialTimeout("tcp", "localhost:9009", 5*time.Second)
-	// error handling wajib
+	Dial, err := net.DialTimeout("tcp", "localhost:9009", 8*time.Second)
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	defer Dial.Close()
 
-	err = Dial.SetReadDeadline(time.Now().Add(5 * time.Second))
-	if err != nil {
-		return
-	}
-
 	err = Dial.SetWriteDeadline(time.Now().Add(8 * time.Second))
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -33,13 +27,9 @@ func main() {
 	scanner.Scan()
 	payload := scanner.Text()
 
-	// payload := "Hello World\n"
-
 	_, err = Dial.Write([]byte(payload))
-
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 
 }
